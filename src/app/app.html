@@ -1,9 +1,76 @@
 <div class="app-container">
+
+  <!-- トップヘッダー -->
   <header class="app-header">
+    <span class="app-logo">&#9680;</span>
     <h1>Apache Superset Dashboard</h1>
   </header>
 
-  <main class="app-main">
-    <app-dashboard [dashboardId]="dashboardId" />
-  </main>
+  <div class="app-body">
+
+    <!-- レフトナビ -->
+    <nav class="app-leftnav">
+      <ul>
+        <li class="nav-item active">
+          <span class="nav-icon">&#9632;</span>
+          <span class="nav-label">ダッシュボード</span>
+        </li>
+        <li class="nav-item">
+          <span class="nav-icon">&#9650;</span>
+          <span class="nav-label">チャート</span>
+        </li>
+        <li class="nav-item">
+          <span class="nav-icon">&#9679;</span>
+          <span class="nav-label">データセット</span>
+        </li>
+        <li class="nav-item">
+          <span class="nav-icon">&#9670;</span>
+          <span class="nav-label">設定</span>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="app-main">
+
+      <!-- サイドバー -->
+      <aside class="app-sidebar">
+        <h2 class="sidebar-title">フィルター</h2>
+        <div class="sidebar-section">
+          <label class="sidebar-label">期間</label>
+          <select class="sidebar-select">
+            <option>全期間</option>
+            <option>直近30日</option>
+            <option>直近7日</option>
+          </select>
+        </div>
+        <div class="sidebar-section">
+          <label class="sidebar-label">カテゴリ</label>
+          <select class="sidebar-select">
+            <option>すべて</option>
+            <option>Action</option>
+            <option>Sports</option>
+            <option>RPG</option>
+          </select>
+        </div>
+        <div class="sidebar-section">
+          <label class="sidebar-label">プラットフォーム</label>
+          <select class="sidebar-select">
+            <option>すべて</option>
+            <option>PS4</option>
+            <option>XB1</option>
+            <option>PC</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- ダッシュボード本体 -->
+      <div class="app-dashboard-area">
+        <app-dashboard [dashboardId]="dashboardId" />
+      </div>
+
+    </main>
+
+  </div>
+
 </div>

@@ -4,6 +4,7 @@
   padding: 0;
 }
 
+// ── 全体コンテナ ───────────────────────────────────────────────────────
 .app-container {
   display: flex;
   flex-direction: column;
@@ -11,26 +12,142 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+// ── トップヘッダー ─────────────────────────────────────────────────────
 .app-header {
   background-color: #001529;
   padding: 0 1.5rem;
-  height: 64px;
+  height: 56px;
   display: flex;
   align-items: center;
+  gap: 0.75rem;
   flex-shrink: 0;
+
+  .app-logo {
+    color: #1890ff;
+    font-size: 1.5rem;
+  }
 
   h1 {
     color: #ffffff;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
   }
 }
 
-.app-main {
+// ── ヘッダー下の横並びエリア ───────────────────────────────────────────
+.app-body {
+  display: flex;
   flex: 1;
   overflow: hidden;
-  padding: 1rem;
+}
+
+// ── レフトナビ ─────────────────────────────────────────────────────────
+.app-leftnav {
+  width: 200px;
+  flex-shrink: 0;
+  background-color: #001529;
+  padding: 1rem 0;
+
+  ul {
+    list-style: none;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    &.active {
+      background-color: #1890ff;
+      color: #fff;
+    }
+
+    .nav-icon {
+      font-size: 0.85rem;
+      width: 16px;
+      text-align: center;
+    }
+
+    .nav-label {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// ── メインコンテンツ（サイドバー + ダッシュボード）──────────────────────
+.app-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
   background-color: #f0f2f5;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+// ── サイドバー ─────────────────────────────────────────────────────────
+.app-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+
+  .sidebar-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #333;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .sidebar-label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 600;
+  }
+
+  .sidebar-select {
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #333;
+    background-color: #fafafa;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #1890ff;
+    }
+  }
+}
+
+// ── ダッシュボードエリア ───────────────────────────────────────────────
+.app-dashboard-area {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
   app-dashboard {
     display: block;
