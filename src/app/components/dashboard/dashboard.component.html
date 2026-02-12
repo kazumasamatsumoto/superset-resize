@@ -1,0 +1,29 @@
+<div class="dashboard-wrapper">
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div class="step-list">
+        <span class="step" [class.active]="currentStep() === 'token'">
+          ① BFF へゲストトークン取得中...
+        </span>
+        <span class="step" [class.active]="currentStep() === 'embed'">
+          ② Embedded SDK 実行中...
+        </span>
+      </div>
+    </div>
+  }
+
+  @if (hasError()) {
+    <div class="error-container">
+      <p class="error-message">{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <div
+    #dashboardContainer
+    class="dashboard-container"
+    [class.hidden]="isLoading() || hasError()"
+  ></div>
+
+</div>

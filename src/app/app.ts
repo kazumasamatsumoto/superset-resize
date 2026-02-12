@@ -1,12 +1,14 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [DashboardComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('apache-superset-frontend');
+  // Superset のダッシュボード ID をここに設定してください
+  // Superset の UI で確認: ダッシュボード > ... > ダッシュボード情報 > UUID
+  readonly dashboardId = 'abbb00fa-f7c9-4162-9c88-4a1ab1af1998';
 }
