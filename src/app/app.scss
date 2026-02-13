@@ -53,22 +53,33 @@
   }
 
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    color: rgba(255, 255, 255, 0.65);
-    cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.08);
-      color: #fff;
     }
 
     &.active {
       background-color: #1890ff;
-      color: #fff;
+
+      .nav-link {
+        color: #fff;
+      }
+    }
+
+    // routerLink を <a> で包む場合のリセット
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
     }
 
     .nav-icon {
@@ -149,7 +160,8 @@
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
-  app-dashboard {
+  // router-outlet の次の兄弟要素 (各ページコンポーネント) を全面表示
+  > * {
     display: block;
     width: 100%;
     height: 100%;

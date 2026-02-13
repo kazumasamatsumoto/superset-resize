@@ -1,0 +1,49 @@
+<div class="page-container">
+
+  <!-- ページヘッダー -->
+  <div class="page-header">
+    <h2 class="page-title">RxJS パターン</h2>
+    <p class="page-desc">
+      <code>AfterViewInit</code> + <code>Subject/takeUntil</code> +
+      <code>fromResizeObserver()</code> による実装
+    </p>
+    <div class="badge-list">
+      <span class="badge badge-old">AfterViewInit</span>
+      <span class="badge badge-old">OnDestroy</span>
+      <span class="badge badge-old">Subject + takeUntil</span>
+      <span class="badge badge-old">switchMap / tap</span>
+      <span class="badge badge-old">fromResizeObserver (Observable化)</span>
+    </div>
+  </div>
+
+  <!-- ダッシュボード本体 -->
+  <div class="dashboard-area">
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="step-list">
+          <span class="step" [class.active]="currentStep() === 'token'">
+            ① BFF へゲストトークン取得中...
+          </span>
+          <span class="step" [class.active]="currentStep() === 'embed'">
+            ② Embedded SDK 実行中...
+          </span>
+        </div>
+      </div>
+    }
+
+    @if (hasError()) {
+      <div class="error-container">
+        <p class="error-message">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <div
+      #dashboardContainer
+      class="dashboard-container"
+      [class.hidden]="isLoading() || hasError()"
+    ></div>
+
+  </div>
+</div>

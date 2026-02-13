@@ -1,0 +1,8 @@
+@use 'shared-page' as *;
+
+// RxJS ページ固有のバッジカラー
+.badge-old {
+  background-color: #fff7e6;
+  color: #d46b08;
+  border-color: #ffd591;
+}

@@ -11,21 +11,19 @@
     <!-- レフトナビ -->
     <nav class="app-leftnav">
       <ul>
-        <li class="nav-item active">
-          <span class="nav-icon">&#9632;</span>
-          <span class="nav-label">ダッシュボード</span>
+        <!-- RxJS パターン版 -->
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/rxjs">
+            <span class="nav-icon">&#9632;</span>
+            <span class="nav-label">RxJS パターン</span>
+          </a>
         </li>
-        <li class="nav-item">
-          <span class="nav-icon">&#9650;</span>
-          <span class="nav-label">チャート</span>
-        </li>
-        <li class="nav-item">
-          <span class="nav-icon">&#9679;</span>
-          <span class="nav-label">データセット</span>
-        </li>
-        <li class="nav-item">
-          <span class="nav-icon">&#9670;</span>
-          <span class="nav-label">設定</span>
+        <!-- ライフサイクル パターン版 -->
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/lifecycle">
+            <span class="nav-icon">&#9650;</span>
+            <span class="nav-label">ライフサイクル パターン</span>
+          </a>
         </li>
       </ul>
     </nav>
@@ -64,9 +62,9 @@
         </div>
       </aside>
 
-      <!-- ダッシュボード本体 -->
+      <!-- ルーターアウトレット: 各パターンページがここに描画される -->
       <div class="app-dashboard-area">
-        <app-dashboard [dashboardId]="dashboardId" />
+        <router-outlet />
       </div>
 
     </main>

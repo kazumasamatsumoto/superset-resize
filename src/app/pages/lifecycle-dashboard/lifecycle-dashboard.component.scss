@@ -1,0 +1,8 @@
+@use 'shared-page' as *;
+
+// ライフサイクル ページ固有のバッジカラー
+.badge-new {
+  background-color: #f6ffed;
+  color: #389e0d;
+  border-color: #b7eb8f;
+}

@@ -1,0 +1,49 @@
+<div class="page-container">
+
+  <!-- ページヘッダー -->
+  <div class="page-header">
+    <h2 class="page-title">Angular ライフサイクル パターン</h2>
+    <p class="page-desc">
+      <code>afterNextRender</code> + <code>afterRenderEffect</code> +
+      <code>DestroyRef</code> による実装
+    </p>
+    <div class="badge-list">
+      <span class="badge badge-new">afterNextRender</span>
+      <span class="badge badge-new">afterRenderEffect</span>
+      <span class="badge badge-new">DestroyRef</span>
+      <span class="badge badge-new">inject()</span>
+      <span class="badge badge-new">firstValueFrom</span>
+    </div>
+  </div>
+
+  <!-- ダッシュボード本体 -->
+  <div class="dashboard-area">
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="step-list">
+          <span class="step" [class.active]="currentStep() === 'token'">
+            ① BFF へゲストトークン取得中...
+          </span>
+          <span class="step" [class.active]="currentStep() === 'embed'">
+            ② Embedded SDK 実行中...
+          </span>
+        </div>
+      </div>
+    }
+
+    @if (hasError()) {
+      <div class="error-container">
+        <p class="error-message">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <div
+      #dashboardContainer
+      class="dashboard-container"
+      [class.hidden]="isLoading() || hasError()"
+    ></div>
+
+  </div>
+</div>

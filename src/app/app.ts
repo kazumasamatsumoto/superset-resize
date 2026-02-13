@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [DashboardComponent],
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  // Superset のダッシュボード ID をここに設定してください
-  // Superset の UI で確認: ダッシュボード > ... > ダッシュボード情報 > UUID
-  readonly dashboardId = 'abbb00fa-f7c9-4162-9c88-4a1ab1af1998';
-}
+export class App {}

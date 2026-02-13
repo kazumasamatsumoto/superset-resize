@@ -1,0 +1,17 @@
+<section class="page-container">
+
+  <!-- パンくずリスト -->
+  <nav class="page-breadcrumb" aria-label="breadcrumb">
+    <span>ホーム</span>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">ダッシュボード</span>
+  </nav>
+
+  <!-- dashboardId が確定してから描画する (空文字ガード) -->
+  @if (dashboardId()) {
+    <app-dashboard [dashboardId]="dashboardId()" />
+  } @else {
+    <p class="page-no-id">ダッシュボード ID が指定されていません。</p>
+  }
+
+</section>

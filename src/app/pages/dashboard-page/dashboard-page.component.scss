@@ -1,0 +1,30 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+.breadcrumb-separator {
+  color: #bbb;
+}
+
+.breadcrumb-current {
+  font-weight: 600;
+  color: #333;
+}
+
+.page-no-id {
+  color: #c0392b;
+  font-size: 14px;
+}
