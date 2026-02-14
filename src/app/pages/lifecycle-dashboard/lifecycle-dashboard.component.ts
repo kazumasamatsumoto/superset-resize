@@ -40,6 +40,7 @@ import { SupersetService } from '../../services/superset.service';
   standalone: true,
   templateUrl: './lifecycle-dashboard.component.html',
   styleUrl: './lifecycle-dashboard.component.scss',
+  host: { style: 'display: block; width: 100%; height: 100%;' },
 })
 export class LifecycleDashboardComponent {
   // ── DOM 参照 ──────────────────────────────────────────────────────────────
@@ -47,10 +48,10 @@ export class LifecycleDashboardComponent {
   private readonly dashboardContainer!: ElementRef<HTMLDivElement>;
 
   // ── テンプレートへ公開する状態 Signal ─────────────────────────────────────
-  protected readonly isLoading    = signal(true);
-  protected readonly hasError     = signal(false);
+  protected readonly isLoading = signal(true);
+  protected readonly hasError = signal(false);
   protected readonly errorMessage = signal('');
-  protected readonly currentStep  = signal<
+  protected readonly currentStep = signal<
     'idle' | 'token' | 'embed' | 'resize' | 'done'
   >('idle');
 
@@ -68,9 +69,9 @@ export class LifecycleDashboardComponent {
 
   // ── DI ───────────────────────────────────────────────────────────────────
   private readonly supersetService = inject(SupersetService);
-  private readonly destroyRef      = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly dashboardId    = 'abbb00fa-f7c9-4162-9c88-4a1ab1af1998';
+  private readonly dashboardId = '974e943f-f298-4c77-b56f-5bb1bd71ce42';
   private readonly supersetDomain = 'http://localhost:8088';
 
   private resizeObserver: ResizeObserver | null = null;
@@ -89,7 +90,7 @@ export class LifecycleDashboardComponent {
     afterRenderEffect(() => {
       const size = this.iframeSize(); // ← この Signal を追跡
       if (this.iframeEl && size) {
-        this.iframeEl.style.width  = `${size.width}px`;
+        this.iframeEl.style.width = `${size.width}px`;
         this.iframeEl.style.height = `${size.height}px`;
         this.currentStep.set('done');
       }

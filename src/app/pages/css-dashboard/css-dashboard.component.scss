@@ -1,0 +1,24 @@
+@use 'shared-page' as *;
+
+// CSS版固有のバッジカラー
+.badge-css {
+  background-color: #f0fff4;
+  color: #237804;
+  border-color: #b7eb8f;
+}
+
+// ── ポイント: CSS だけで iframe サイズを制御する ──────────────────────────────
+//
+// Superset Embedded SDK は embedDashboard() 実行時に iframe へ
+// 固定ピクセルサイズ (例: width="800" height="600") を HTML 属性として注入する。
+// !important を使って CSS 側から上書きすることで、
+// ResizeObserver によるリサイズ後処理が不要になるかを検証する。
+//
+.dashboard-container {
+  ::ng-deep iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+    display: block;
+  }
+}

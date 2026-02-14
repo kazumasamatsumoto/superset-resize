@@ -28,6 +28,16 @@ export const routes: Routes = [
     title: 'ライフサイクル パターン版',
   },
 
+  // /css — CSS サイズ制御パターン版 (ResizeObserver 不使用)
+  {
+    path: 'css',
+    loadComponent: () =>
+      import('./pages/css-dashboard/css-dashboard.component').then(
+        (m) => m.CssDashboardComponent,
+      ),
+    title: 'CSS サイズ制御パターン版',
+  },
+
   // 未マッチは / へフォールバック
   {
     path: '**',

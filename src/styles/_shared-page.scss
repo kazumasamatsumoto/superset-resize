@@ -129,6 +129,8 @@
   ::ng-deep iframe {
     border: none;
     display: block;
+    width: 100% !important;
+    height: 100% !important;
   }
 
   &.hidden {

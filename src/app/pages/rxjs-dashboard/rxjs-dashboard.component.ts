@@ -76,6 +76,7 @@ function fromResizeObserver(target: Element): Observable<ResizeObserverEntry> {
   standalone: true,
   templateUrl: './rxjs-dashboard.component.html',
   styleUrl: './rxjs-dashboard.component.scss',
+  host: { style: 'display: block; width: 100%; height: 100%;' },
 })
 export class RxjsDashboardComponent implements AfterViewInit, OnDestroy {
   // ── DOM 参照 ──────────────────────────────────────────────────────────────
@@ -83,15 +84,15 @@ export class RxjsDashboardComponent implements AfterViewInit, OnDestroy {
   private readonly dashboardContainer!: ElementRef<HTMLDivElement>;
 
   // ── テンプレートへ公開する状態 Signal ─────────────────────────────────────
-  protected readonly isLoading    = signal(true);
-  protected readonly hasError     = signal(false);
+  protected readonly isLoading = signal(true);
+  protected readonly hasError = signal(false);
   protected readonly errorMessage = signal('');
-  protected readonly currentStep  = signal<
+  protected readonly currentStep = signal<
     'idle' | 'token' | 'embed' | 'resize' | 'done'
   >('idle');
 
   // ── 定数 ─────────────────────────────────────────────────────────────────
-  private readonly dashboardId    = 'abbb00fa-f7c9-4162-9c88-4a1ab1af1998';
+  private readonly dashboardId = '974e943f-f298-4c77-b56f-5bb1bd71ce42';
   private readonly supersetDomain = 'http://localhost:8088';
 
   /**
@@ -101,7 +102,7 @@ export class RxjsDashboardComponent implements AfterViewInit, OnDestroy {
    */
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly supersetService: SupersetService) {}
+  constructor(private readonly supersetService: SupersetService) { }
 
   // ── AfterViewInit: DOM 確定後に RxJS パイプラインを起動 ────────────────────
   ngAfterViewInit(): void {
@@ -193,7 +194,7 @@ export class RxjsDashboardComponent implements AfterViewInit, OnDestroy {
             ),
             tap(({ width, height }) => {
               if (ctx.iframe) {
-                ctx.iframe.style.width  = `${width}px`;
+                ctx.iframe.style.width = `${width}px`;
                 ctx.iframe.style.height = `${height}px`;
               }
               this.currentStep.set('done');
