@@ -1,30 +1,31 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * CSS サイズ制御パターン版 ダッシュボードページ
+ * afterNextRender パターン版 ダッシュボードページ
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * 【検証内容】
- *  - ResizeObserver によるリサイズ処理を一切行わず、
- *    CSS (width: 100% !important; height: 100% !important) だけで
- *    iframe のサイズを親コンテナに追従させられるかを検証する。
+ *  - Angular 16.2+ の afterNextRender を使用し、
+ *    AfterViewInit を implements せずに DOM 確定後の処理を記述する。
  *
  * 【ライフサイクルの切り分け】
- *  - ngOnInit      : DOM 不要な処理（ゲストトークン取得 HTTP リクエスト）を先行開始
- *  - ngAfterViewInit: mountPoint（実 DOM）が確定してから embedDashboard を実行
- *  - Subject(guestToken$) で2つのライフサイクルを RxJS チェーンとして接続
+ *  - ngOnInit       : DOM 不要な処理（ゲストトークン取得 HTTP リクエスト）を先行開始
+ *  - afterNextRender: コンストラクタ内で登録。次の1回のレンダリング後に
+ *                     mountPoint を取得して embedDashboard を実行
+ *  - Subject(guestToken$) で ngOnInit と afterNextRender を RxJS チェーンで接続
  *
- * 【CSS側の対応】
- *  - ::ng-deep iframe { width: 100% !important; height: 100% !important; }
- *    を追加することで SDK が注入する固定ピクセルサイズを上書きする
+ * 【AfterViewInit との違い】
+ *  - implements AfterViewInit が不要
+ *  - コンストラクタ内（インジェクションコンテキスト内）で登録する関数ベースの API
+ *  - SSR 時は自動スキップされるためブラウザ限定処理を安全に記述できる
  * ─────────────────────────────────────────────────────────────────────────────
  */
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
+  afterNextRender,
   signal,
 } from '@angular/core';
 import { Subject, from, defer, EMPTY } from 'rxjs';
@@ -33,13 +34,13 @@ import { embedDashboard } from '@superset-ui/embedded-sdk';
 import { SupersetService } from '../../services/superset.service';
 
 @Component({
-  selector: 'app-css-dashboard',
+  selector: 'app-after-next-render-dashboard',
   standalone: true,
-  templateUrl: './css-dashboard.component.html',
-  styleUrl: './css-dashboard.component.scss',
+  templateUrl: './after-next-render-dashboard.component.html',
+  styleUrl: './after-next-render-dashboard.component.scss',
   host: { style: 'display: block; width: 100%; height: 100%;' },
 })
-export class CssDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AfterNextRenderDashboardComponent implements OnInit, OnDestroy {
   // ── DOM 参照 ──────────────────────────────────────────────────────────────
   @ViewChild('dashboardContainer', { static: true })
   private readonly dashboardContainer!: ElementRef<HTMLDivElement>;
@@ -55,11 +56,64 @@ export class CssDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly supersetDomain = 'http://localhost:8088';
 
   // ── ライフサイクル間の橋渡し Subject ─────────────────────────────────────
-  // ngOnInit で取得したトークンを ngAfterViewInit 側のストリームへ流す
+  // ngOnInit で取得したトークンを afterNextRender 側のストリームへ流す
   private readonly guestToken$ = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly supersetService: SupersetService) {}
+  constructor(private readonly supersetService: SupersetService) {
+    // ── afterNextRender: 次の1回のレンダリング後に DOM 操作を実行 ────────────
+    // インジェクションコンテキスト内（コンストラクタ）で登録する必要がある
+    // SSR 時は自動スキップされる（AfterViewInit との大きな違い）
+    afterNextRender(() => {
+      const mountPoint = this.dashboardContainer.nativeElement;
+
+      // ngOnInit で先行取得したトークンを受け取って embed 実行
+      this.guestToken$
+        .pipe(
+          tap(() => this.currentStep.set('embed')),
+
+          // ── Step 2: Embedded SDK 実行 ─────────────────────────────────────
+          switchMap(() =>
+            defer(() =>
+              from(
+                embedDashboard({
+                  id: this.dashboardId,
+                  supersetDomain: this.supersetDomain,
+                  mountPoint,
+                  fetchGuestToken: () =>
+                    this.supersetService
+                      .getGuestToken(this.dashboardId)
+                      .toPromise() as Promise<string>,
+                  dashboardUiConfig: {
+                    hideTitle: false,
+                    hideChartControls: false,
+                    hideTab: false,
+                  },
+                }),
+              ),
+            ),
+          ),
+
+          tap(() => {
+            this.isLoading.set(false);
+            this.currentStep.set('done');
+          }),
+
+          catchError((err: unknown) => {
+            console.error('[afterNextRender版] embed エラー:', err);
+            this.isLoading.set(false);
+            this.hasError.set(true);
+            this.errorMessage.set(
+              'ダッシュボードの読み込みに失敗しました。Superset と BFF が起動しているか確認してください。',
+            );
+            return EMPTY;
+          }),
+
+          takeUntil(this.destroy$),
+        )
+        .subscribe();
+    });
+  }
 
   // ── ngOnInit: DOM 不要なトークン取得を先行開始 ────────────────────────────
   ngOnInit(): void {
@@ -73,7 +127,7 @@ export class CssDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (token) => this.guestToken$.next(token),
         error: (err: unknown) => {
-          console.error('[CSS版] トークン取得エラー:', err);
+          console.error('[afterNextRender版] トークン取得エラー:', err);
           this.isLoading.set(false);
           this.hasError.set(true);
           this.errorMessage.set(
@@ -81,57 +135,6 @@ export class CssDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         },
       });
-  }
-
-  // ── ngAfterViewInit: mountPoint 確定後、token を受け取って embed 実行 ──────
-  ngAfterViewInit(): void {
-    const mountPoint = this.dashboardContainer.nativeElement;
-
-    this.guestToken$
-      .pipe(
-        tap(() => this.currentStep.set('embed')),
-
-        // ── Step 2: Embedded SDK 実行 ───────────────────────────────────────
-        switchMap(() =>
-          defer(() =>
-            from(
-              embedDashboard({
-                id: this.dashboardId,
-                supersetDomain: this.supersetDomain,
-                mountPoint,
-                fetchGuestToken: () =>
-                  this.supersetService
-                    .getGuestToken(this.dashboardId)
-                    .toPromise() as Promise<string>,
-                dashboardUiConfig: {
-                  hideTitle: false,
-                  hideChartControls: false,
-                  hideTab: false,
-                },
-              }),
-            ),
-          ),
-        ),
-
-        tap(() => {
-          this.isLoading.set(false);
-          this.currentStep.set('done');
-          // ResizeObserver なし: CSS の width/height 100% !important で制御
-        }),
-
-        catchError((err: unknown) => {
-          console.error('[CSS版] embed エラー:', err);
-          this.isLoading.set(false);
-          this.hasError.set(true);
-          this.errorMessage.set(
-            'ダッシュボードの読み込みに失敗しました。Superset と BFF が起動しているか確認してください。',
-          );
-          return EMPTY;
-        }),
-
-        takeUntil(this.destroy$),
-      )
-      .subscribe();
   }
 
   // ── OnDestroy: ストリーム完了 & DOM クリーンアップ ─────────────────────────

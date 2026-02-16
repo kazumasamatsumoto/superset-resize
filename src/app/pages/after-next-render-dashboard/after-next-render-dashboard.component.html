@@ -1,0 +1,49 @@
+<div class="page-container">
+
+  <!-- ページヘッダー -->
+  <div class="page-header">
+    <h2 class="page-title">afterNextRender パターン</h2>
+    <p class="page-desc">
+      <code>afterNextRender</code> + <code>ngOnInit</code> による実装。
+      <code>AfterViewInit</code> を implements せずにコンストラクタ内で DOM 確定後の処理を登録する。
+      SSR 時は自動スキップされるため、ブラウザ限定処理を安全に記述できる。
+    </p>
+    <div class="badge-list">
+      <span class="badge badge-anr">afterNextRender (コンストラクタ登録)</span>
+      <span class="badge badge-anr">ngOnInit (HTTP 先行取得)</span>
+      <span class="badge badge-anr">AfterViewInit 不使用</span>
+      <span class="badge badge-anr">SSR 自動スキップ対応</span>
+    </div>
+  </div>
+
+  <!-- ダッシュボード本体 -->
+  <div class="dashboard-area">
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="step-list">
+          <span class="step" [class.active]="currentStep() === 'token'">
+            ① BFF へゲストトークン取得中...
+          </span>
+          <span class="step" [class.active]="currentStep() === 'embed'">
+            ② Embedded SDK 実行中...
+          </span>
+        </div>
+      </div>
+    }
+
+    @if (hasError()) {
+      <div class="error-container">
+        <p class="error-message">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <div
+      #dashboardContainer
+      class="dashboard-container"
+      [class.hidden]="isLoading() || hasError()"
+    ></div>
+
+  </div>
+</div>

@@ -38,6 +38,16 @@ export const routes: Routes = [
     title: 'CSS サイズ制御パターン版',
   },
 
+  // /after-next-render — afterNextRender パターン版 (AfterViewInit 不使用)
+  {
+    path: 'after-next-render',
+    loadComponent: () =>
+      import('./pages/after-next-render-dashboard/after-next-render-dashboard.component').then(
+        (m) => m.AfterNextRenderDashboardComponent,
+      ),
+    title: 'afterNextRender パターン版',
+  },
+
   // 未マッチは / へフォールバック
   {
     path: '**',

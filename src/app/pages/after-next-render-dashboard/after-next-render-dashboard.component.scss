@@ -1,0 +1,18 @@
+@use 'shared-page' as *;
+
+// afterNextRender版固有のバッジカラー
+.badge-anr {
+  background-color: #fff7e6;
+  color: #874d00;
+  border-color: #ffd591;
+}
+
+// iframe サイズ制御（CSS版と同様）
+.dashboard-container {
+  ::ng-deep iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+    display: block;
+  }
+}
